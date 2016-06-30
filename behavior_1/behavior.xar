@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ChoregrapheProject xmlns="http://www.aldebaran-robotics.com/schema/choregraphe/project.xsd" xar_version="3">
+    <Box name="root" id="-1" localization="8" tooltip="Root box of Choregraphe&apos;s behavior. Highest level possible." x="0" y="0">
+        <bitmap>media/images/box/root.png</bitmap>
+        <script language="4">
+            <content>
+                <![CDATA[]]>
+</content>
+        </script>
+        <Input name="onLoad" type="1" type_size="1" nature="0" inner="1" tooltip="Signal sent when diagram is loaded." id="1" />
+        <Input name="onStart" type="1" type_size="1" nature="2" inner="0" tooltip="Box behavior starts when a signal is received on this input." id="2" />
+        <Input name="onStop" type="1" type_size="1" nature="3" inner="0" tooltip="Box behavior stops when a signal is received on this input." id="3" />
+        <Output name="onStopped" type="1" type_size="1" nature="1" inner="0" tooltip="Signal sent when box behavior is finished." id="4" />
+        <Timeline enable="0">
+            <BehaviorLayer name="behavior_layer1">
+                <BehaviorKeyframe name="keyframe1" index="1">
+                    <Diagram>
+                        <Box name="Game" id="1" localization="8" tooltip="Algo" x="408" y="204">
+                            <bitmap>media/images/box/box-python-script.png</bitmap>
+                            <script language="4">
+                                <content>
+                                    <![CDATA[import random
+
+class MyClass(GeneratedClass):
+    def __init__(self):
+        GeneratedClass.__init__(self)
+        # Proxy prive
+        self.__tts = ALProxy('ALTextToSpeech')
+        # Options du jeu
+        self.__options = {1 : "pierre", 2 : "feuille", 3 : "ciseaux"}
+
+    def onInput_input(self, p):
+    	user_choice = 0
+
+    	for key, value in self.__options.iteritems():
+		    if value == p:
+		        user_choice = key
+		        self.__tts.say(str(key))
+
+		# On verifie que la valeure d'entrée est bonne
+      	if user_choice > 0:
+       		self.game(user_choice)
+       	else :
+      		self.__tts.say("Cela ne fait pas parti du jeu")
+        pass
+
+    def game(self, user_choice):
+    	# state 2 : Match nul
+    	# state 1 : Nao a perdu
+    	# state 0 : Nao a gagne
+    	# Match nul de base
+    	state = 2
+
+    	rand = random.randint(1,3)
+    	self.__tts.say("Choix du user : " + self.__options[user_choice])
+    	self.__tts.say("Choix du robot : " + self.__options[rand])
+
+    	if rand == 1:
+    		if user_choice == 2 :
+    			state = 1
+    		elif user_choice == 3 :
+    			state = 0
+
+    	elif rand == 2:
+    		if user_choice == 3 :
+    			state = 1
+    		elif user_choice == 1 :
+    			state = 0
+
+    	else:
+    		if user_choice == 1 :
+    			state = 1
+    		elif user_choice == 2 :
+    			state = 0
+
+    	self.__tts.say(str(state))
+    	return]]>
+</content>
+                            </script>
+                            <Input name="onLoad" type="1" type_size="1" nature="0" inner="1" tooltip="Signal sent when diagram is loaded." id="1" />
+                            <Input name="input" type="3" type_size="1" nature="1" inner="0" tooltip="" id="2" />
+                            <Output name="output" type="2" type_size="1" nature="2" inner="0" tooltip="" id="3" />
+                        </Box>
+                    </Diagram>
+                </BehaviorKeyframe>
+            </BehaviorLayer>
+        </Timeline>
+    </Box>
+</ChoregrapheProject>
